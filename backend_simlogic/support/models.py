@@ -29,7 +29,7 @@ class SupportRecord(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='support_records',
-        limit_choices_to={'role': 'SUPPORT'},
+        limit_choices_to={'role': 'TECHNICAL_COORDINATOR'},
     )
     room = models.ForeignKey(
         Room,

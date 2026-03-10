@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from .models import MaintenanceType, SupportRecord
 from .permissions import (
     IsAdminOrReadOnlyForSupport,
-    IsSupportOrAdmin,
+    IsTechnicalCoordinatorOrAdmin,
     IsSupportRecordOwnerOrAdmin,
 )
 from .serializers import (
@@ -37,7 +37,7 @@ class MaintenanceTypeDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 class SupportRecordListCreateView(generics.ListCreateAPIView):
     serializer_class = SupportRecordSerializer
-    permission_classes = (IsSupportOrAdmin,)
+    permission_classes = (IsTechnicalCoordinatorOrAdmin,)
 
     def get_queryset(self):
         user = self.request.user
@@ -46,7 +46,7 @@ class SupportRecordListCreateView(generics.ListCreateAPIView):
         )
         if user.is_admin_role:
             return queryset.all()
-        if user.is_support:
+        if user.is_technical_coordinator:
             return queryset.filter(support_person=user)
         return SupportRecord.objects.none()
 
@@ -73,7 +73,7 @@ class SupportRecordListCreateView(generics.ListCreateAPIView):
 
 
 class SupportRecordDetailView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = (IsSupportOrAdmin, IsSupportRecordOwnerOrAdmin)
+    permission_classes = (IsTechnicalCoordinatorOrAdmin, IsSupportRecordOwnerOrAdmin)
 
     def get_queryset(self):
         user = self.request.user
@@ -106,8 +106,8 @@ class MyRecordsView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        if not user.is_support:
-            raise PermissionDenied('Only support staff can view their own records.')
+        if not user.is_coordinator:
+            raise PermissionDenied('Only coordinators can view their own records.')
         return SupportRecord.objects.select_related(
             'support_person', 'room', 'maintenance_type'
         ).filter(support_person=user)

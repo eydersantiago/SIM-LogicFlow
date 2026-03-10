@@ -4,12 +4,15 @@ from django.db import models
 
 class User(AbstractUser):
     class Role(models.TextChoices):
-        STUDENT = 'STUDENT', 'Student'
-        SUPPORT = 'SUPPORT', 'Support Staff'
-        ADMIN = 'ADMIN', 'Administrator'
+        STUDENT = 'STUDENT', 'Estudiante'
+        ACADEMIC_COORDINATOR = 'ACADEMIC_COORDINATOR', 'Coordinador Académico'
+        TECHNICAL_COORDINATOR = 'TECHNICAL_COORDINATOR', 'Coordinador Técnico'
+        INSTRUCTOR = 'INSTRUCTOR', 'Instructor'
+        PSEUDOPILOT = 'PSEUDOPILOT', 'Pseudopiloto'
+        ADMIN = 'ADMIN', 'Administrador'
 
     role = models.CharField(
-        max_length=10,
+        max_length=22,
         choices=Role.choices,
         default=Role.STUDENT,
     )
@@ -28,8 +31,25 @@ class User(AbstractUser):
         return self.role == self.Role.STUDENT
 
     @property
-    def is_support(self):
-        return self.role == self.Role.SUPPORT
+    def is_academic_coordinator(self):
+        return self.role == self.Role.ACADEMIC_COORDINATOR
+
+    @property
+    def is_technical_coordinator(self):
+        return self.role == self.Role.TECHNICAL_COORDINATOR
+
+    @property
+    def is_coordinator(self):
+        """True for either coordinator role."""
+        return self.role in (self.Role.ACADEMIC_COORDINATOR, self.Role.TECHNICAL_COORDINATOR)
+
+    @property
+    def is_instructor(self):
+        return self.role == self.Role.INSTRUCTOR
+
+    @property
+    def is_pseudopilot(self):
+        return self.role == self.Role.PSEUDOPILOT
 
     @property
     def is_admin_role(self):

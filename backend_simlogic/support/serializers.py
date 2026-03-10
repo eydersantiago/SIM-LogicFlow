@@ -42,9 +42,9 @@ class SupportRecordSerializer(serializers.ModelSerializer):
 
         if request and hasattr(request, 'user'):
             user = request.user
-            if not user.is_support and not user.is_admin_role:
+            if not user.is_technical_coordinator and not user.is_admin_role:
                 raise serializers.ValidationError(
-                    'Only support staff or administrators can create support records.'
+                    'Only coordinators or administrators can create support records.'
                 )
 
         scheduled_date = attrs.get('scheduled_date')
@@ -54,22 +54,29 @@ class SupportRecordSerializer(serializers.ModelSerializer):
                 {'completed_date': 'Completed date cannot be before the scheduled date.'}
             )
 
-        status = attrs.get('status', SupportRecord.Status.PENDING)
-        if status == SupportRecord.Status.COMPLETED and not completed_date:
+        status_val = attrs.get('status', SupportRecord.Status.PENDING)
+        if status_val == SupportRecord.Status.COMPLETED and not completed_date:
             raise serializers.ValidationError(
                 {'completed_date': 'A completed date is required when status is COMPLETED.'}
             )
 
         room = attrs.get('room')
-        if room and scheduled_date and status in [SupportRecord.Status.PENDING, SupportRecord.Status.IN_PROGRESS]:
-            conflicting = CourseSession.objects.filter(
-                room=room,
+        if room and scheduled_date and status_val in [SupportRecord.Status.PENDING, SupportRecord.Status.IN_PROGRESS]:
+            # Check conflict with main_room or pseudopilot_room in active sessions
+            conflicting_main = CourseSession.objects.filter(
+                main_room=room,
                 is_active=True,
                 start_date__lte=scheduled_date,
                 end_date__gte=scheduled_date,
             )
-            if conflicting.exists():
-                conflict = conflicting.first()
+            conflicting_pseudo = CourseSession.objects.filter(
+                pseudopilot_room=room,
+                is_active=True,
+                start_date__lte=scheduled_date,
+                end_date__gte=scheduled_date,
+            )
+            conflict = conflicting_main.first() or conflicting_pseudo.first()
+            if conflict:
                 raise serializers.ValidationError({
                     'room': (
                         f'La sala "{room.name}" tiene una sesión de curso activa '
@@ -82,7 +89,7 @@ class SupportRecordSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         request = self.context.get('request')
-        if request and request.user.is_support:
+        if request and request.user.is_technical_coordinator:
             validated_data['support_person'] = request.user
         return super().create(validated_data)
 
@@ -110,25 +117,31 @@ class SupportRecordUpdateSerializer(serializers.ModelSerializer):
                 {'completed_date': 'Completed date cannot be before the scheduled date.'}
             )
 
-        status = attrs.get(
+        status_val = attrs.get(
             'status',
             self.instance.status if self.instance else SupportRecord.Status.PENDING
         )
-        if status == SupportRecord.Status.COMPLETED and not completed_date:
+        if status_val == SupportRecord.Status.COMPLETED and not completed_date:
             raise serializers.ValidationError(
                 {'completed_date': 'A completed date is required when status is COMPLETED.'}
             )
 
         room = attrs.get('room', self.instance.room if self.instance else None)
-        if room and scheduled_date and status in [SupportRecord.Status.PENDING, SupportRecord.Status.IN_PROGRESS]:
-            conflicting = CourseSession.objects.filter(
-                room=room,
+        if room and scheduled_date and status_val in [SupportRecord.Status.PENDING, SupportRecord.Status.IN_PROGRESS]:
+            conflicting_main = CourseSession.objects.filter(
+                main_room=room,
                 is_active=True,
                 start_date__lte=scheduled_date,
                 end_date__gte=scheduled_date,
             )
-            if conflicting.exists():
-                conflict = conflicting.first()
+            conflicting_pseudo = CourseSession.objects.filter(
+                pseudopilot_room=room,
+                is_active=True,
+                start_date__lte=scheduled_date,
+                end_date__gte=scheduled_date,
+            )
+            conflict = conflicting_main.first() or conflicting_pseudo.first()
+            if conflict:
                 raise serializers.ValidationError({
                     'room': (
                         f'La sala "{room.name}" tiene una sesión de curso activa '

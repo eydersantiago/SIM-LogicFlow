@@ -5,21 +5,21 @@ from .views import (
     CourseListCreateView,
     CourseSessionDetailView,
     CourseSessionListCreateView,
-    EnrollmentDetailView,
-    EnrollmentListCreateView,
-    MyEnrollmentsView,
+    MyScheduleView,
     RoomDetailView,
     RoomListCreateView,
+    SimulatorDetailView,
+    SimulatorListCreateView,
 )
 
 urlpatterns = [
     path('', CourseListCreateView.as_view(), name='course-list-create'),
     path('<int:pk>/', CourseDetailView.as_view(), name='course-detail'),
+    path('simulators/', SimulatorListCreateView.as_view(), name='simulator-list-create'),
+    path('simulators/<int:pk>/', SimulatorDetailView.as_view(), name='simulator-detail'),
     path('rooms/', RoomListCreateView.as_view(), name='room-list-create'),
     path('rooms/<int:pk>/', RoomDetailView.as_view(), name='room-detail'),
     path('sessions/', CourseSessionListCreateView.as_view(), name='session-list-create'),
     path('sessions/<int:pk>/', CourseSessionDetailView.as_view(), name='session-detail'),
-    path('enrollments/', EnrollmentListCreateView.as_view(), name='enrollment-list-create'),
-    path('enrollments/<int:pk>/', EnrollmentDetailView.as_view(), name='enrollment-detail'),
-    path('my-enrollments/', MyEnrollmentsView.as_view(), name='my-enrollments'),
+    path('my-schedule/', MyScheduleView.as_view(), name='my-schedule'),
 ]
