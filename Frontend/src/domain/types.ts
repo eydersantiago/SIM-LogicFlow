@@ -9,6 +9,8 @@ export type UserRole =
 export interface AppUser {
   id: number
   username: string
+  firstName?: string
+  lastName?: string
   fullName: string
   email: string
   role: UserRole

@@ -1,71 +1,83 @@
 import { useEffect, useState } from 'react'
 
-import { roleLabels } from '@/app/navigation'
+import { useAuth } from '@/context/AuthContext'
 import type { AppUser } from '@/domain/types'
-import { fetchUsers } from '@/services/api/simlogicApi'
+import { deleteUser, fetchUsers } from '@/services/api/simlogicApi'
+
+import { CreateUserSection } from '../components/create/CreateUserSection'
+import { EditUserSection } from '../components/edit/EditUserSection'
+import { UsersIndexSection } from '../components/index/UsersIndexSection'
 
 export function UsersPage() {
+  const { user: currentUser } = useAuth()
   const [users, setUsers] = useState<AppUser[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState('')
+  const [statusMessage, setStatusMessage] = useState('')
+  const [selectedUser, setSelectedUser] = useState<AppUser | null>(null)
+  const [deletingUserId, setDeletingUserId] = useState<number | null>(null)
+
+  const loadUsers = async () => {
+    setIsLoading(true)
+    setErrorMessage('')
+    try {
+      const payload = await fetchUsers()
+      setUsers(payload)
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error ? error.message : 'No se pudo cargar el listado de usuarios.',
+      )
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   useEffect(() => {
-    const loadUsers = async () => {
-      setIsLoading(true)
-      setErrorMessage('')
-      try {
-        const payload = await fetchUsers()
-        setUsers(payload)
-      } catch (error) {
-        setErrorMessage(
-          error instanceof Error ? error.message : 'No se pudo cargar el listado de usuarios.',
-        )
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
     loadUsers()
   }, [])
+
+  const handleDelete = async (user: AppUser) => {
+    const confirmed = window.confirm(`¿Deseas eliminar al usuario "${user.username}"?`)
+    if (!confirmed) {
+      return
+    }
+
+    setDeletingUserId(user.id)
+    setStatusMessage('')
+    setErrorMessage('')
+    try {
+      await deleteUser(user.id)
+      setStatusMessage('Usuario eliminado correctamente.')
+      if (selectedUser?.id === user.id) {
+        setSelectedUser(null)
+      }
+      await loadUsers()
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : 'No se pudo eliminar el usuario.')
+    } finally {
+      setDeletingUserId(null)
+    }
+  }
 
   return (
     <>
       <header className="page-header">
         <h3>Administracion de usuarios</h3>
-        <p>Listado en tiempo real desde el backend.</p>
+        <p>CRUD completo con estructura `index/create/edit/form`.</p>
       </header>
 
-      <section className="card stack">
-        {isLoading ? <p className="inline-note">Cargando usuarios...</p> : null}
-        {errorMessage ? <p className="status-alert">{errorMessage}</p> : null}
-
-        {!isLoading && !errorMessage ? (
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Usuario</th>
-                <th>Nombre</th>
-                <th>Email</th>
-                <th>Rol</th>
-                <th>Estado</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((userItem) => (
-                <tr key={userItem.id}>
-                  <td>{userItem.username}</td>
-                  <td>{userItem.fullName}</td>
-                  <td>{userItem.email}</td>
-                  <td>{roleLabels[userItem.role]}</td>
-                  <td>
-                    <span className="badge">{userItem.isActive ? 'Activo' : 'Inactivo'}</span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : null}
-      </section>
+      <CreateUserSection onCreated={loadUsers} />
+      {statusMessage ? <p className="status-ok">{statusMessage}</p> : null}
+      <UsersIndexSection
+        canDelete={currentUser?.role === 'ADMIN'}
+        deletingUserId={deletingUserId}
+        errorMessage={errorMessage}
+        isLoading={isLoading}
+        onDelete={handleDelete}
+        onEdit={setSelectedUser}
+        users={users}
+      />
+      <EditUserSection onCancel={() => setSelectedUser(null)} onUpdated={loadUsers} user={selectedUser} />
     </>
   )
 }

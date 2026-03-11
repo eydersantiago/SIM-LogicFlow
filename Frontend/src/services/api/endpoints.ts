@@ -11,6 +11,7 @@ export const API_ENDPOINTS = {
     simulators: '/courses/simulators/',
     rooms: '/courses/rooms/',
     courses: '/courses/',
+    courseDetail: (id: number | string) => `/courses/${id}/`,
     sessions: '/courses/sessions/',
     mySchedule: '/courses/my-schedule/',
   },
