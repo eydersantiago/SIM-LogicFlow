@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from courses.models import CourseSession
 from courses.serializers import RoomSerializer
+from users.models import User
 from .models import MaintenanceType, SupportRecord
 
 
@@ -18,6 +19,10 @@ class MaintenanceTypeSerializer(serializers.ModelSerializer):
 
 
 class SupportRecordSerializer(serializers.ModelSerializer):
+    support_person = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.filter(role=User.Role.TECHNICAL_COORDINATOR),
+        required=False,
+    )
     support_person_username = serializers.CharField(
         source='support_person.username', read_only=True
     )
@@ -35,7 +40,7 @@ class SupportRecordSerializer(serializers.ModelSerializer):
             'scheduled_date', 'completed_date', 'status',
             'notes', 'created_at', 'updated_at',
         )
-        read_only_fields = ('id', 'support_person', 'created_at', 'updated_at')
+        read_only_fields = ('id', 'created_at', 'updated_at')
 
     def validate(self, attrs):
         request = self.context.get('request')
@@ -45,6 +50,12 @@ class SupportRecordSerializer(serializers.ModelSerializer):
             if not user.is_technical_coordinator and not user.is_admin_role:
                 raise serializers.ValidationError(
                     'Only coordinators or administrators can create support records.'
+                )
+            if user.is_technical_coordinator:
+                attrs['support_person'] = user
+            elif user.is_admin_role and 'support_person' not in attrs:
+                raise serializers.ValidationError(
+                    {'support_person': 'This field is required for admin users.'}
                 )
 
         scheduled_date = attrs.get('scheduled_date')
@@ -86,12 +97,6 @@ class SupportRecordSerializer(serializers.ModelSerializer):
                 })
 
         return attrs
-
-    def create(self, validated_data):
-        request = self.context.get('request')
-        if request and request.user.is_technical_coordinator:
-            validated_data['support_person'] = request.user
-        return super().create(validated_data)
 
 
 class SupportRecordUpdateSerializer(serializers.ModelSerializer):

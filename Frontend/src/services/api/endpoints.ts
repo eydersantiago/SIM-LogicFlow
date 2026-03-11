@@ -1,21 +1,22 @@
 export const API_ENDPOINTS = {
   auth: {
+    register: '/auth/register/',
     login: '/auth/login/',
     refresh: '/auth/refresh/',
+    me: '/auth/me/',
+    users: '/auth/users/',
+    userDetail: (id: number | string) => `/auth/users/${id}/`,
   },
-  users: {
-    list: '/users/',
-    detail: (id: string) => `/users/${id}/`,
+  courses: {
+    simulators: '/courses/simulators/',
+    rooms: '/courses/rooms/',
+    courses: '/courses/',
+    sessions: '/courses/sessions/',
+    mySchedule: '/courses/my-schedule/',
   },
-  academic: {
-    courses: '/academic/courses/',
-    sessions: '/academic/sessions/',
-    restrictions: '/academic/restrictions/validate/',
-  },
-  technical: {
-    maintenances: '/technical/maintenances/',
-  },
-  reports: {
-    summary: '/reports/summary/',
+  support: {
+    maintenanceTypes: '/support/maintenance-types/',
+    records: '/support/records/',
+    myRecords: '/support/my-records/',
   },
 }

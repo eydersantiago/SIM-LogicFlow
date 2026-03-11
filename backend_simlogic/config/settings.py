@@ -6,7 +6,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-dev-key-change-in-production-abc123xyz')
 
-DEBUG = config('DEBUG', default=True, cast=bool)
+def env_bool(name: str, default: bool) -> bool:
+    raw_value = str(config(name, default=str(default))).strip().lower()
+    return raw_value in {'1', 'true', 'yes', 'on'}
+
+
+DEBUG = env_bool('DEBUG', True)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
 
@@ -112,7 +117,7 @@ SIMPLE_JWT = {
 
 CORS_ALLOWED_ORIGINS = config(
     'CORS_ALLOWED_ORIGINS',
-    default='http://localhost:3000,http://127.0.0.1:3000',
+    default='http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,http://127.0.0.1:5173',
     cast=Csv(),
 )
 

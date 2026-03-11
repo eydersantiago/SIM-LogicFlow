@@ -14,7 +14,9 @@ export function AppShell() {
   }
 
   const isCoordinatorRole =
-    user.role === 'COORDINADOR_ACADEMICO' || user.role === 'COORDINADOR_TECNICO'
+    user.role === 'ADMIN' ||
+    user.role === 'ACADEMIC_COORDINATOR' ||
+    user.role === 'TECHNICAL_COORDINATOR'
 
   const availableModules = appModules.filter(
     (moduleItem) => moduleItem.visibleInMenu && moduleItem.allowedRoles.includes(user.role),

@@ -1,7 +1,6 @@
-from rest_framework import generics, status
+from rest_framework import generics
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 
 from .models import MaintenanceType, SupportRecord
 from .permissions import (
@@ -55,22 +54,6 @@ class SupportRecordListCreateView(generics.ListCreateAPIView):
         context['request'] = self.request
         return context
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        if request.user.is_admin_role and 'support_person' not in request.data:
-            return Response(
-                {'detail': 'Admins must specify a support_person when creating records.'},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        record = serializer.save()
-        return Response(
-            SupportRecordSerializer(record, context={'request': request}).data,
-            status=status.HTTP_201_CREATED,
-        )
-
 
 class SupportRecordDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsTechnicalCoordinatorOrAdmin, IsSupportRecordOwnerOrAdmin)
@@ -106,8 +89,8 @@ class MyRecordsView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        if not user.is_coordinator:
-            raise PermissionDenied('Only coordinators can view their own records.')
+        if not user.is_technical_coordinator:
+            raise PermissionDenied('Only technical coordinators can view their own records.')
         return SupportRecord.objects.select_related(
             'support_person', 'room', 'maintenance_type'
         ).filter(support_person=user)

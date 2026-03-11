@@ -21,7 +21,7 @@ export function AppRouter() {
 
       <Route element={<ProtectedRoute />}>
         <Route
-          element={<ProtectedRoute allowedRoles={['COORDINADOR_ACADEMICO', 'COORDINADOR_TECNICO']} />}
+          element={<ProtectedRoute allowedRoles={['ADMIN', 'ACADEMIC_COORDINATOR', 'TECHNICAL_COORDINATOR']} />}
         >
           <Route path="perfil/configuracion" element={<ProfileSettingsPage />} />
         </Route>
@@ -32,25 +32,27 @@ export function AppRouter() {
 
           <Route
             element={
-              <ProtectedRoute allowedRoles={['COORDINADOR_ACADEMICO', 'COORDINADOR_TECNICO']} />
+              <ProtectedRoute
+                allowedRoles={['ADMIN', 'ACADEMIC_COORDINATOR', 'TECHNICAL_COORDINATOR']}
+              />
             }
           >
             <Route path="coordinacion/usuarios" element={<UsersPage />} />
           </Route>
 
-          <Route element={<ProtectedRoute allowedRoles={['COORDINADOR_ACADEMICO']} />}>
+          <Route element={<ProtectedRoute allowedRoles={['ADMIN', 'ACADEMIC_COORDINATOR']} />}>
             <Route path="academico/cursos" element={<CoursesPage />} />
             <Route path="academico/programacion" element={<SchedulingPage />} />
           </Route>
 
-          <Route element={<ProtectedRoute allowedRoles={['COORDINADOR_TECNICO']} />}>
+          <Route element={<ProtectedRoute allowedRoles={['ADMIN', 'TECHNICAL_COORDINATOR']} />}>
             <Route path="tecnico/mantenimientos" element={<MaintenancePage />} />
           </Route>
 
           <Route
             element={
               <ProtectedRoute
-                allowedRoles={['COORDINADOR_ACADEMICO', 'COORDINADOR_TECNICO']}
+                allowedRoles={['ADMIN', 'ACADEMIC_COORDINATOR', 'TECHNICAL_COORDINATOR']}
               />
             }
           >

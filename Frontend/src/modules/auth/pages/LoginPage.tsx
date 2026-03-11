@@ -1,27 +1,37 @@
 import { useState, type FormEvent } from 'react'
 import { Navigate } from 'react-router-dom'
 
-import { roleLabels } from '@/app/navigation'
 import { useAuth } from '@/context/AuthContext'
-import { usersMock } from '@/domain/mockData'
-import type { UserRole } from '@/domain/types'
-
-const roleOptions = Array.from(new Set(usersMock.map((userItem) => userItem.role)))
 
 export function LoginPage() {
-  const { isAuthenticated, loginAsRole } = useAuth()
-  const [selectedRole, setSelectedRole] = useState<UserRole>('COORDINADOR_ACADEMICO')
-  const [showRolePicker, setShowRolePicker] = useState(false)
-  const [email, setEmail] = useState('')
+  const { isAuthenticated, isBootstrapping, login } = useAuth()
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  if (isBootstrapping) {
+    return null
+  }
 
   if (isAuthenticated) {
     return <Navigate replace to="/" />
   }
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    loginAsRole(selectedRole)
+    setErrorMessage('')
+    setIsSubmitting(true)
+
+    try {
+      await login(username.trim(), password)
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error ? error.message : 'No se pudo iniciar sesion. Intenta de nuevo.',
+      )
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -34,7 +44,7 @@ export function LoginPage() {
             </div>
             <div className="login-brand-copy">
               <h1>Bienvenido</h1>
-              <p>Que bueno tenerte nuevamente</p>
+              <p>Ingresa con tus credenciales del backend</p>
             </div>
           </div>
         </aside>
@@ -44,15 +54,15 @@ export function LoginPage() {
             <h2>Inicio de Sesion</h2>
 
             <div className="field login-field">
-              <label htmlFor="email">Correo</label>
+              <label htmlFor="username">Usuario</label>
               <input
-                autoComplete="email"
-                id="email"
-                onChange={(event) => setEmail(event.target.value)}
-                placeholder="usuario@cea.gov.co"
+                autoComplete="username"
+                id="username"
+                onChange={(event) => setUsername(event.target.value)}
+                placeholder="admin"
                 required
-                type="email"
-                value={email}
+                type="text"
+                value={username}
               />
             </div>
 
@@ -69,34 +79,11 @@ export function LoginPage() {
               />
             </div>
 
-            <button className="button button-primary login-submit" type="submit">
-              Entrar
-            </button>
+            {errorMessage ? <p className="status-alert">{errorMessage}</p> : null}
 
-            <button
-              className="login-role-toggle"
-              onClick={() => setShowRolePicker((value) => !value)}
-              type="button"
-            >
-              Modo demo
+            <button className="button button-primary login-submit" disabled={isSubmitting} type="submit">
+              {isSubmitting ? 'Ingresando...' : 'Entrar'}
             </button>
-
-            {showRolePicker ? (
-              <div className="field login-role-picker">
-                <label htmlFor="role">Perfil temporal</label>
-                <select
-                  id="role"
-                  onChange={(event) => setSelectedRole(event.target.value as UserRole)}
-                  value={selectedRole}
-                >
-                  {roleOptions.map((roleOption) => (
-                    <option key={roleOption} value={roleOption}>
-                      {roleLabels[roleOption]}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            ) : null}
           </form>
         </main>
       </article>

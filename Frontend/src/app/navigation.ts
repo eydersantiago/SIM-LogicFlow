@@ -1,11 +1,12 @@
 import type { RouteModule, UserRole } from '@/domain/types'
 
 export const roleLabels: Record<UserRole, string> = {
-  COORDINADOR_ACADEMICO: 'Coord. Academico',
-  COORDINADOR_TECNICO: 'Coord. Tecnico',
+  ADMIN: 'Administrador',
+  ACADEMIC_COORDINATOR: 'Coord. Academico',
+  TECHNICAL_COORDINATOR: 'Coord. Tecnico',
   INSTRUCTOR: 'Instructor',
-  PSEUDOPILOTO: 'Pseudopiloto',
-  ESTUDIANTE: 'Estudiante',
+  PSEUDOPILOT: 'Pseudopiloto',
+  STUDENT: 'Estudiante',
 }
 
 export const appModules: RouteModule[] = [
@@ -14,11 +15,12 @@ export const appModules: RouteModule[] = [
     label: 'Panel General',
     description: 'Resumen de programacion y operacion',
     allowedRoles: [
-      'COORDINADOR_ACADEMICO',
-      'COORDINADOR_TECNICO',
+      'ADMIN',
+      'ACADEMIC_COORDINATOR',
+      'TECHNICAL_COORDINATOR',
       'INSTRUCTOR',
-      'PSEUDOPILOTO',
-      'ESTUDIANTE',
+      'PSEUDOPILOT',
+      'STUDENT',
     ],
     visibleInMenu: true,
   },
@@ -26,28 +28,28 @@ export const appModules: RouteModule[] = [
     path: '/coordinacion/usuarios',
     label: 'Usuarios',
     description: 'Gestion inicial de perfiles y roles',
-    allowedRoles: ['COORDINADOR_ACADEMICO', 'COORDINADOR_TECNICO'],
+    allowedRoles: ['ADMIN', 'ACADEMIC_COORDINATOR', 'TECHNICAL_COORDINATOR'],
     visibleInMenu: true,
   },
   {
     path: '/academico/cursos',
     label: 'Cursos ATS',
     description: 'Creacion y ajuste de cursos',
-    allowedRoles: ['COORDINADOR_ACADEMICO'],
+    allowedRoles: ['ADMIN', 'ACADEMIC_COORDINATOR'],
     visibleInMenu: true,
   },
   {
     path: '/academico/programacion',
     label: 'Programacion',
     description: 'Agendamiento y validacion de restricciones',
-    allowedRoles: ['COORDINADOR_ACADEMICO'],
+    allowedRoles: ['ADMIN', 'ACADEMIC_COORDINATOR'],
     visibleInMenu: true,
   },
   {
     path: '/tecnico/mantenimientos',
     label: 'Mantenimientos',
     description: 'Bloqueos preventivos y correctivos',
-    allowedRoles: ['COORDINADOR_TECNICO'],
+    allowedRoles: ['ADMIN', 'TECHNICAL_COORDINATOR'],
     visibleInMenu: true,
   },
   {
@@ -55,11 +57,12 @@ export const appModules: RouteModule[] = [
     label: 'Consulta Agenda',
     description: 'Vista semanal o mensual para usuarios finales',
     allowedRoles: [
-      'COORDINADOR_ACADEMICO',
-      'COORDINADOR_TECNICO',
+      'ADMIN',
+      'ACADEMIC_COORDINATOR',
+      'TECHNICAL_COORDINATOR',
       'INSTRUCTOR',
-      'PSEUDOPILOTO',
-      'ESTUDIANTE',
+      'PSEUDOPILOT',
+      'STUDENT',
     ],
     visibleInMenu: true,
   },
@@ -67,7 +70,7 @@ export const appModules: RouteModule[] = [
     path: '/reportes',
     label: 'Reportes',
     description: 'Metricas de uso y operatividad',
-    allowedRoles: ['COORDINADOR_ACADEMICO', 'COORDINADOR_TECNICO'],
+    allowedRoles: ['ADMIN', 'ACADEMIC_COORDINATOR', 'TECHNICAL_COORDINATOR'],
     visibleInMenu: true,
   },
 ]

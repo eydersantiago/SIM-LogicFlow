@@ -12,7 +12,7 @@ function splitName(fullName: string) {
 }
 
 export function ProfileSettingsPage() {
-  const { user } = useAuth()
+  const { updateProfile, user } = useAuth()
   const navigate = useNavigate()
 
   const { firstName: initialFirstName, lastName: initialLastName } = splitName(user?.fullName ?? '')
@@ -20,10 +20,13 @@ export function ProfileSettingsPage() {
   const [firstName, setFirstName] = useState(initialFirstName)
   const [lastName, setLastName] = useState(initialLastName)
   const [email, setEmail] = useState(user?.email ?? '')
-  const [phone, setPhone] = useState('')
+  const [phone, setPhone] = useState(user?.phone ?? '')
   const [birthDate, setBirthDate] = useState('')
   const [gender, setGender] = useState('')
   const [profileImage, setProfileImage] = useState<File | null>(null)
+  const [submitMessage, setSubmitMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
+  const [isSaving, setIsSaving] = useState(false)
 
   const previewUrl = useMemo(() => {
     if (!profileImage) {
@@ -50,6 +53,21 @@ export function ProfileSettingsPage() {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    setSubmitMessage('')
+    setErrorMessage('')
+    setIsSaving(true)
+
+    updateProfile({
+      first_name: firstName.trim(),
+      last_name: lastName.trim(),
+      email: email.trim(),
+      phone: phone.trim(),
+    })
+      .then(() => setSubmitMessage('Perfil actualizado correctamente.'))
+      .catch((error) =>
+        setErrorMessage(error instanceof Error ? error.message : 'No fue posible actualizar el perfil.'),
+      )
+      .finally(() => setIsSaving(false))
   }
 
   return (
@@ -146,10 +164,12 @@ export function ProfileSettingsPage() {
             <button className="button button-muted" onClick={() => navigate('/')} type="button">
               Volver
             </button>
-            <button className="button button-primary" type="submit">
-              Guardar cambios
+            <button className="button button-primary" disabled={isSaving} type="submit">
+              {isSaving ? 'Guardando...' : 'Guardar cambios'}
             </button>
           </div>
+          {submitMessage ? <p className="status-ok">{submitMessage}</p> : null}
+          {errorMessage ? <p className="status-alert">{errorMessage}</p> : null}
         </form>
       </div>
     </section>

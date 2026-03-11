@@ -1,62 +1,123 @@
-import { createContext, useContext, useMemo, useState, type ReactNode } from 'react'
+/* eslint-disable react-refresh/only-export-components */
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from 'react'
 
-import { usersMock } from '@/domain/mockData'
-import type { AppUser, UserRole } from '@/domain/types'
+import type { AppUser } from '@/domain/types'
+import {
+  clearAuthTokens,
+  getAccessToken,
+  setAuthTokens,
+} from '@/services/api/client'
+import {
+  fetchMe,
+  login as loginRequest,
+  updateMe,
+  type ProfileUpdatePayload,
+} from '@/services/api/simlogicApi'
 
-const SESSION_STORAGE_KEY = 'sim-logicflow-session'
+const USER_STORAGE_KEY = 'sim-logicflow-user'
 
 interface AuthContextValue {
   user: AppUser | null
   isAuthenticated: boolean
-  loginAsRole: (role: UserRole) => void
+  isBootstrapping: boolean
+  login: (username: string, password: string) => Promise<void>
   logout: () => void
+  refreshUser: () => Promise<void>
+  updateProfile: (payload: ProfileUpdatePayload) => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
 
-function getInitialUser(): AppUser | null {
-  const rawUser = localStorage.getItem(SESSION_STORAGE_KEY)
-
-  if (!rawUser) {
+function getInitialUser() {
+  const payload = localStorage.getItem(USER_STORAGE_KEY)
+  if (!payload) {
     return null
   }
 
   try {
-    const parsedUser = JSON.parse(rawUser) as AppUser
-    return parsedUser
+    return JSON.parse(payload) as AppUser
   } catch {
-    localStorage.removeItem(SESSION_STORAGE_KEY)
+    localStorage.removeItem(USER_STORAGE_KEY)
     return null
   }
 }
 
+function persistUser(user: AppUser | null) {
+  if (!user) {
+    localStorage.removeItem(USER_STORAGE_KEY)
+    return
+  }
+  localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user))
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AppUser | null>(getInitialUser)
+  const [isBootstrapping, setIsBootstrapping] = useState(true)
 
-  const loginAsRole = (role: UserRole) => {
-    const selectedUser = usersMock.find((item) => item.role === role)
+  const logout = useCallback(() => {
+    clearAuthTokens()
+    persistUser(null)
+    setUser(null)
+  }, [])
 
-    if (!selectedUser) {
-      return
+  const refreshUser = useCallback(async () => {
+    const me = await fetchMe()
+    persistUser(me)
+    setUser(me)
+  }, [])
+
+  const login = useCallback(async (username: string, password: string) => {
+    const payload = await loginRequest(username, password)
+    setAuthTokens(payload.access, payload.refresh)
+    persistUser(payload.user)
+    setUser(payload.user)
+  }, [])
+
+  const updateProfile = useCallback(async (payload: ProfileUpdatePayload) => {
+    const updatedUser = await updateMe(payload)
+    persistUser(updatedUser)
+    setUser(updatedUser)
+  }, [])
+
+  useEffect(() => {
+    const bootstrap = async () => {
+      const accessToken = getAccessToken()
+      if (!accessToken) {
+        setIsBootstrapping(false)
+        return
+      }
+
+      try {
+        await refreshUser()
+      } catch {
+        logout()
+      } finally {
+        setIsBootstrapping(false)
+      }
     }
 
-    localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(selectedUser))
-    setUser(selectedUser)
-  }
-
-  const logout = () => {
-    localStorage.removeItem(SESSION_STORAGE_KEY)
-    setUser(null)
-  }
+    bootstrap()
+  }, [logout, refreshUser])
 
   const value = useMemo<AuthContextValue>(
     () => ({
       user,
       isAuthenticated: Boolean(user),
-      loginAsRole,
+      isBootstrapping,
+      login,
       logout,
+      refreshUser,
+      updateProfile,
     }),
-    [user],
+    [isBootstrapping, login, logout, refreshUser, updateProfile, user],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

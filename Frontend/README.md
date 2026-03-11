@@ -77,7 +77,7 @@ npm run preview
 Copiar `.env.example` a `.env`:
 
 ```env
-VITE_API_BASE_URL=http://localhost:8000/api/v1
+VITE_API_BASE_URL=http://localhost:8000/api
 ```
 
 ## 6. Notas de integracion backend
@@ -85,4 +85,3 @@ VITE_API_BASE_URL=http://localhost:8000/api/v1
 - El cliente HTTP base esta en `src/services/api/client.ts`.
 - Los endpoints base estan en `src/services/api/endpoints.ts`.
 - Se debe conectar con Django REST Framework en la siguiente iteracion.
-

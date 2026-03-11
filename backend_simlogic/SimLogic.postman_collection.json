@@ -1,0 +1,1648 @@
+{
+    "variable":  [
+                     {
+                         "key":  "base_url",
+                         "value":  "http://127.0.0.1:8000"
+                     },
+                     {
+                         "key":  "access_token",
+                         "value":  ""
+                     },
+                     {
+                         "key":  "refresh_token",
+                         "value":  ""
+                     },
+                     {
+                         "key":  "simulator_id",
+                         "value":  "1"
+                     },
+                     {
+                         "key":  "room_id",
+                         "value":  "1"
+                     },
+                     {
+                         "key":  "pseudopilot_room_id",
+                         "value":  "3"
+                     },
+                     {
+                         "key":  "course_id",
+                         "value":  "1"
+                     },
+                     {
+                         "key":  "session_id",
+                         "value":  "1"
+                     },
+                     {
+                         "key":  "maintenance_type_id",
+                         "value":  "1"
+                     },
+                     {
+                         "key":  "record_id",
+                         "value":  "1"
+                     },
+                     {
+                         "key":  "support_person_id",
+                         "value":  "1"
+                     }
+                 ],
+    "info":  {
+                 "description":  "Coleccion generada desde backend_simlogic/README.md con todas las peticiones documentadas.",
+                 "name":  "SimLogic Backend API",
+                 "schema":  "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+                 "_postman_id":  "f7843bc4-a4e8-4f3e-b6da-b053b71bc6ef"
+             },
+    "item":  [
+                 {
+                     "name":  "Autenticacion",
+                     "item":  [
+                                  {
+                                      "request":  {
+                                                      "body":  {
+                                                                   "raw":  "{\n  \"username\": \"jperez\",\n  \"email\": \"jperez@empresa.com\",\n  \"first_name\": \"Juan\",\n  \"last_name\": \"Perez\",\n  \"role\": \"STUDENT\",\n  \"phone\": \"3001234567\",\n  \"password\": \"MiClave123@\",\n  \"password_confirm\": \"MiClave123@\"\n}",
+                                                                   "options":  {
+                                                                                   "raw":  {
+                                                                                               "language":  "json"
+                                                                                           }
+                                                                               },
+                                                                   "mode":  "raw"
+                                                               },
+                                                      "method":  "POST",
+                                                      "url":  "{{base_url}}/api/auth/register/",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ]
+                                                  },
+                                      "name":  "Register",
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "request":  {
+                                                      "body":  {
+                                                                   "raw":  "{\n  \"username\": \"jperez\",\n  \"password\": \"MiClave123@\"\n}",
+                                                                   "options":  {
+                                                                                   "raw":  {
+                                                                                               "language":  "json"
+                                                                                           }
+                                                                               },
+                                                                   "mode":  "raw"
+                                                               },
+                                                      "method":  "POST",
+                                                      "url":  "{{base_url}}/api/auth/login/",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ]
+                                                  },
+                                      "name":  "Login",
+                                      "event":  [
+                                                    {
+                                                        "script":  {
+                                                                       "exec":  [
+                                                                                    "let data = {};",
+                                                                                    "try { data = pm.response.json(); } catch (e) {}",
+                                                                                    "if (data.access) { pm.collectionVariables.set(\u0027access_token\u0027, data.access); }",
+                                                                                    "if (data.refresh) { pm.collectionVariables.set(\u0027refresh_token\u0027, data.refresh); }"
+                                                                                ],
+                                                                       "type":  "text/javascript"
+                                                                   },
+                                                        "listen":  "test"
+                                                    }
+                                                ],
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "request":  {
+                                                      "body":  {
+                                                                   "raw":  "{\n  \"refresh\": \"{{refresh_token}}\"\n}",
+                                                                   "options":  {
+                                                                                   "raw":  {
+                                                                                               "language":  "json"
+                                                                                           }
+                                                                               },
+                                                                   "mode":  "raw"
+                                                               },
+                                                      "method":  "POST",
+                                                      "url":  "{{base_url}}/api/auth/refresh/",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ]
+                                                  },
+                                      "name":  "Refresh Token",
+                                      "event":  [
+                                                    {
+                                                        "script":  {
+                                                                       "exec":  [
+                                                                                    "let data = {};",
+                                                                                    "try { data = pm.response.json(); } catch (e) {}",
+                                                                                    "if (data.access) { pm.collectionVariables.set(\u0027access_token\u0027, data.access); }"
+                                                                                ],
+                                                                       "type":  "text/javascript"
+                                                                   },
+                                                        "listen":  "test"
+                                                    }
+                                                ],
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "request":  {
+                                                      "body":  {
+                                                                   "raw":  "",
+                                                                   "options":  {
+                                                                                   "raw":  {
+                                                                                               "language":  "json"
+                                                                                           }
+                                                                               },
+                                                                   "mode":  "raw"
+                                                               },
+                                                      "method":  "GET",
+                                                      "url":  "{{base_url}}/api/auth/me/",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "auth":  {
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "type":  "string",
+                                                                                      "value":  "{{access_token}}"
+                                                                                  }
+                                                                              ],
+                                                                   "type":  "bearer"
+                                                               }
+                                                  },
+                                      "name":  "Me - Get Profile",
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "request":  {
+                                                      "body":  {
+                                                                   "raw":  "{\n  \"first_name\": \"Juan Carlos\",\n  \"phone\": \"3009876543\"\n}",
+                                                                   "options":  {
+                                                                                   "raw":  {
+                                                                                               "language":  "json"
+                                                                                           }
+                                                                               },
+                                                                   "mode":  "raw"
+                                                               },
+                                                      "method":  "PATCH",
+                                                      "url":  "{{base_url}}/api/auth/me/",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "auth":  {
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "type":  "string",
+                                                                                      "value":  "{{access_token}}"
+                                                                                  }
+                                                                              ],
+                                                                   "type":  "bearer"
+                                                               }
+                                                  },
+                                      "name":  "Me - Patch Profile",
+                                      "response":  [
+
+                                                   ]
+                                  }
+                              ]
+                 },
+                 {
+                     "name":  "Cursos",
+                     "item":  [
+                                  {
+                                      "name":  "Simuladores",
+                                      "item":  [
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "GET",
+                                                                       "url":  "{{base_url}}/api/courses/simulators/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "List Simulators",
+                                                       "response":  [
+
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "{\n  \"name\": \"Simulador Indra 1\",\n  \"brand\": \"INDRA\"\n}",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "POST",
+                                                                       "url":  "{{base_url}}/api/courses/simulators/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Create Simulator",
+                                                       "response":  [
+
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "GET",
+                                                                       "url":  "{{base_url}}/api/courses/simulators/{{simulator_id}}/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Get Simulator By ID",
+                                                       "response":  [
+
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "{\n  \"name\": \"Simulador Indra 1\",\n  \"brand\": \"INDRA\",\n  \"is_active\": true\n}",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "PUT",
+                                                                       "url":  "{{base_url}}/api/courses/simulators/{{simulator_id}}/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Update Simulator (PUT)",
+                                                       "response":  [
+
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "{\n  \"is_active\": true\n}",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "PATCH",
+                                                                       "url":  "{{base_url}}/api/courses/simulators/{{simulator_id}}/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Partial Update Simulator (PATCH)",
+                                                       "response":  [
+
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "DELETE",
+                                                                       "url":  "{{base_url}}/api/courses/simulators/{{simulator_id}}/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Delete Simulator",
+                                                       "response":  [
+
+                                                                    ]
+                                                   }
+                                               ]
+                                  },
+                                  {
+                                      "name":  "Salas",
+                                      "item":  [
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "GET",
+                                                                       "url":  "{{base_url}}/api/courses/rooms/?simulator={{simulator_id}}\u0026room_type=RADAR\u0026is_active=true",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "List Rooms",
+                                                       "response":  [
+
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "{\n  \"simulator\": {{simulator_id}},\n  \"name\": \"Sala Radar Indra\",\n  \"room_type\": \"RADAR\",\n  \"student_capacity\": 10,\n  \"instructor_capacity\": 5,\n  \"pseudopilot_capacity\": 0\n}",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "POST",
+                                                                       "url":  "{{base_url}}/api/courses/rooms/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Create Room",
+                                                       "response":  [
+
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "GET",
+                                                                       "url":  "{{base_url}}/api/courses/rooms/{{room_id}}/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Get Room By ID",
+                                                       "response":  [
+
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "{\n  \"simulator\": {{simulator_id}},\n  \"name\": \"Sala Radar Indra\",\n  \"room_type\": \"RADAR\",\n  \"student_capacity\": 10,\n  \"instructor_capacity\": 5,\n  \"pseudopilot_capacity\": 0,\n  \"is_active\": true\n}",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "PUT",
+                                                                       "url":  "{{base_url}}/api/courses/rooms/{{room_id}}/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Update Room (PUT)",
+                                                       "response":  [
+
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "{\n  \"student_capacity\": 10,\n  \"instructor_capacity\": 5\n}",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "PATCH",
+                                                                       "url":  "{{base_url}}/api/courses/rooms/{{room_id}}/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Partial Update Room (PATCH)",
+                                                       "response":  [
+
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "DELETE",
+                                                                       "url":  "{{base_url}}/api/courses/rooms/{{room_id}}/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Delete Room",
+                                                       "response":  [
+
+                                                                    ]
+                                                   }
+                                               ]
+                                  },
+                                  {
+                                      "name":  "Cursos",
+                                      "item":  [
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "GET",
+                                                                       "url":  "{{base_url}}/api/courses/?course_type=RADAR\u0026is_active=true",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "List Courses",
+                                                       "response":  [
+
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "{\n  \"name\": \"Curso Radar Basico\",\n  \"description\": \"Curso introductorio de radar\",\n  \"course_type\": \"RADAR\",\n  \"min_simulation_hours\": 20\n}",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "POST",
+                                                                       "url":  "{{base_url}}/api/courses/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Create Course",
+                                                       "response":  [
+
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "GET",
+                                                                       "url":  "{{base_url}}/api/courses/{{course_id}}/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Get Course By ID",
+                                                       "response":  [
+
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "{\n  \"name\": \"Curso Radar Basico\",\n  \"description\": \"Curso introductorio de radar\",\n  \"course_type\": \"RADAR\",\n  \"min_simulation_hours\": 20,\n  \"is_active\": true\n}",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "PUT",
+                                                                       "url":  "{{base_url}}/api/courses/{{course_id}}/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Update Course (PUT)",
+                                                       "response":  [
+
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "{\n  \"description\": \"Curso actualizado\"\n}",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "PATCH",
+                                                                       "url":  "{{base_url}}/api/courses/{{course_id}}/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Partial Update Course (PATCH)",
+                                                       "response":  [
+
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "DELETE",
+                                                                       "url":  "{{base_url}}/api/courses/{{course_id}}/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Delete Course",
+                                                       "response":  [
+
+                                                                    ]
+                                                   }
+                                               ]
+                                  },
+                                  {
+                                      "name":  "Sesiones",
+                                      "item":  [
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "GET",
+                                                                       "url":  "{{base_url}}/api/courses/sessions/?course={{course_id}}\u0026is_active=true",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "List Sessions",
+                                                       "response":  [
+
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "{\n  \"course\": {{course_id}},\n  \"main_room\": {{room_id}},\n  \"pseudopilot_room\": {{pseudopilot_room_id}},\n  \"students\": [4, 5, 6],\n  \"instructors\": [7, 8],\n  \"pseudopilots\": [9, 10],\n  \"start_date\": \"2026-03-20\",\n  \"end_date\": \"2026-04-20\",\n  \"schedule_time\": \"08:00\",\n  \"daily_simulation_hours\": 6\n}",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "POST",
+                                                                       "url":  "{{base_url}}/api/courses/sessions/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Create Session",
+                                                       "response":  [
+
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "GET",
+                                                                       "url":  "{{base_url}}/api/courses/sessions/{{session_id}}/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Get Session By ID",
+                                                       "response":  [
+
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "{\n  \"course\": {{course_id}},\n  \"main_room\": {{room_id}},\n  \"pseudopilot_room\": {{pseudopilot_room_id}},\n  \"students\": [4, 5],\n  \"instructors\": [6],\n  \"pseudopilots\": [7],\n  \"start_date\": \"2026-03-20\",\n  \"end_date\": \"2026-04-20\",\n  \"schedule_time\": \"08:00\",\n  \"daily_simulation_hours\": 6,\n  \"is_active\": true\n}",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "PUT",
+                                                                       "url":  "{{base_url}}/api/courses/sessions/{{session_id}}/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Update Session (PUT)",
+                                                       "response":  [
+
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "{\n  \"schedule_time\": \"09:00\",\n  \"daily_simulation_hours\": 5\n}",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "PATCH",
+                                                                       "url":  "{{base_url}}/api/courses/sessions/{{session_id}}/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Partial Update Session (PATCH)",
+                                                       "response":  [
+
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "DELETE",
+                                                                       "url":  "{{base_url}}/api/courses/sessions/{{session_id}}/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Delete Session",
+                                                       "response":  [
+
+                                                                    ]
+                                                   }
+                                               ]
+                                  },
+                                  {
+                                      "name":  "Mi Horario",
+                                      "item":  [
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "GET",
+                                                                       "url":  "{{base_url}}/api/courses/my-schedule/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Get My Schedule",
+                                                       "response":  [
+
+                                                                    ]
+                                                   }
+                                               ]
+                                  }
+                              ]
+                 },
+                 {
+                     "name":  "Soporte Tecnico",
+                     "item":  [
+                                  {
+                                      "name":  "Tipos de Mantenimiento",
+                                      "item":  [
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "GET",
+                                                                       "url":  "{{base_url}}/api/support/maintenance-types/?is_active=true",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "List Maintenance Types",
+                                                       "response":  [
+
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "{\n  \"name\": \"Limpieza general\",\n  \"description\": \"Limpieza de equipos y sala\"\n}",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "POST",
+                                                                       "url":  "{{base_url}}/api/support/maintenance-types/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Create Maintenance Type",
+                                                       "response":  [
+
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "GET",
+                                                                       "url":  "{{base_url}}/api/support/maintenance-types/{{maintenance_type_id}}/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Get Maintenance Type By ID",
+                                                       "response":  [
+
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "{\n  \"name\": \"Limpieza general\",\n  \"description\": \"Limpieza de equipos y sala\",\n  \"is_active\": true\n}",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "PUT",
+                                                                       "url":  "{{base_url}}/api/support/maintenance-types/{{maintenance_type_id}}/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Update Maintenance Type (PUT)",
+                                                       "response":  [
+
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "{\n  \"description\": \"Descripcion actualizada\"\n}",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "PATCH",
+                                                                       "url":  "{{base_url}}/api/support/maintenance-types/{{maintenance_type_id}}/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Partial Update Maintenance Type (PATCH)",
+                                                       "response":  [
+
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "DELETE",
+                                                                       "url":  "{{base_url}}/api/support/maintenance-types/{{maintenance_type_id}}/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Delete Maintenance Type",
+                                                       "response":  [
+
+                                                                    ]
+                                                   }
+                                               ]
+                                  },
+                                  {
+                                      "name":  "Registros de Soporte",
+                                      "item":  [
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "GET",
+                                                                       "url":  "{{base_url}}/api/support/records/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "List Support Records",
+                                                       "response":  [
+
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "{\n  \"room\": {{room_id}},\n  \"maintenance_type\": {{maintenance_type_id}},\n  \"support_person\": {{support_person_id}},\n  \"scheduled_date\": \"2026-03-15\",\n  \"status\": \"PENDING\",\n  \"notes\": \"Revision mensual de equipos\"\n}",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "POST",
+                                                                       "url":  "{{base_url}}/api/support/records/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Create Support Record",
+                                                       "response":  [
+
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "GET",
+                                                                       "url":  "{{base_url}}/api/support/records/{{record_id}}/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Get Support Record By ID",
+                                                       "response":  [
+
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "{\n  \"room\": {{room_id}},\n  \"maintenance_type\": {{maintenance_type_id}},\n  \"support_person\": {{support_person_id}},\n  \"scheduled_date\": \"2026-03-15\",\n  \"completed_date\": null,\n  \"status\": \"PENDING\",\n  \"notes\": \"Revision mensual de equipos\"\n}",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "PUT",
+                                                                       "url":  "{{base_url}}/api/support/records/{{record_id}}/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Update Support Record (PUT)",
+                                                       "response":  [
+
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "{\n  \"status\": \"IN_PROGRESS\"\n}",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "PATCH",
+                                                                       "url":  "{{base_url}}/api/support/records/{{record_id}}/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Partial Update Support Record (PATCH)",
+                                                       "response":  [
+
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "{\n  \"status\": \"COMPLETED\",\n  \"completed_date\": \"2026-03-15\"\n}",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "PATCH",
+                                                                       "url":  "{{base_url}}/api/support/records/{{record_id}}/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Mark Support Record As Completed (PATCH)",
+                                                       "response":  [
+
+                                                                    ]
+                                                   },
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "DELETE",
+                                                                       "url":  "{{base_url}}/api/support/records/{{record_id}}/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Delete Support Record",
+                                                       "response":  [
+
+                                                                    ]
+                                                   }
+                                               ]
+                                  },
+                                  {
+                                      "name":  "Mis Registros",
+                                      "item":  [
+                                                   {
+                                                       "request":  {
+                                                                       "body":  {
+                                                                                    "raw":  "",
+                                                                                    "options":  {
+                                                                                                    "raw":  {
+                                                                                                                "language":  "json"
+                                                                                                            }
+                                                                                                },
+                                                                                    "mode":  "raw"
+                                                                                },
+                                                                       "method":  "GET",
+                                                                       "url":  "{{base_url}}/api/support/my-records/",
+                                                                       "header":  [
+                                                                                      {
+                                                                                          "key":  "Content-Type",
+                                                                                          "value":  "application/json"
+                                                                                      }
+                                                                                  ],
+                                                                       "auth":  {
+                                                                                    "bearer":  [
+                                                                                                   {
+                                                                                                       "key":  "token",
+                                                                                                       "type":  "string",
+                                                                                                       "value":  "{{access_token}}"
+                                                                                                   }
+                                                                                               ],
+                                                                                    "type":  "bearer"
+                                                                                }
+                                                                   },
+                                                       "name":  "Get My Support Records",
+                                                       "response":  [
+
+                                                                    ]
+                                                   }
+                                               ]
+                                  }
+                              ]
+                 }
+             ]
+}

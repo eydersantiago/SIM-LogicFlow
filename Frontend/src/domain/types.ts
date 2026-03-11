@@ -1,15 +1,20 @@
 export type UserRole =
-  | 'COORDINADOR_ACADEMICO'
-  | 'COORDINADOR_TECNICO'
+  | 'ADMIN'
+  | 'ACADEMIC_COORDINATOR'
+  | 'TECHNICAL_COORDINATOR'
   | 'INSTRUCTOR'
-  | 'PSEUDOPILOTO'
-  | 'ESTUDIANTE'
+  | 'PSEUDOPILOT'
+  | 'STUDENT'
 
 export interface AppUser {
-  id: string
+  id: number
+  username: string
   fullName: string
   email: string
   role: UserRole
+  phone?: string | null
+  createdAt?: string
+  isActive?: boolean
 }
 
 export type SimulatorPlatform = 'THALES' | 'INDRA'

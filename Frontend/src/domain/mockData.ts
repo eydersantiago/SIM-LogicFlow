@@ -9,34 +9,39 @@ import type {
 
 export const usersMock: AppUser[] = [
   {
-    id: 'u-001',
+    id: 1,
+    username: 'paula.mendoza',
     fullName: 'Paula Mendoza',
     email: 'paula.mendoza@cea.gov.co',
-    role: 'COORDINADOR_ACADEMICO',
+    role: 'ACADEMIC_COORDINATOR',
   },
   {
-    id: 'u-002',
+    id: 2,
+    username: 'carlos.pardo',
     fullName: 'Carlos Pardo',
     email: 'carlos.pardo@cea.gov.co',
-    role: 'COORDINADOR_TECNICO',
+    role: 'TECHNICAL_COORDINATOR',
   },
   {
-    id: 'u-003',
+    id: 3,
+    username: 'maria.correa',
     fullName: 'Maria Correa',
     email: 'maria.correa@cea.gov.co',
     role: 'INSTRUCTOR',
   },
   {
-    id: 'u-004',
+    id: 4,
+    username: 'diego.suarez',
     fullName: 'Diego Suarez',
     email: 'diego.suarez@cea.gov.co',
-    role: 'PSEUDOPILOTO',
+    role: 'PSEUDOPILOT',
   },
   {
-    id: 'u-005',
+    id: 5,
+    username: 'laura.rojas',
     fullName: 'Laura Rojas',
     email: 'laura.rojas@cea.gov.co',
-    role: 'ESTUDIANTE',
+    role: 'STUDENT',
   },
 ]
 

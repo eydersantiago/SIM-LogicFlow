@@ -1,90 +1,81 @@
-import {
-  academicSessionsMock,
-  maintenanceWindowsMock,
-  roomRules,
-} from '@/domain/mockData'
-import type { AcademicSession } from '@/domain/types'
-import { evaluateAcademicRestrictions } from '@/modules/academic/restrictions/restrictionEngine'
+import { useEffect, useState } from 'react'
 
-const candidateSession: AcademicSession = {
-  id: 'draft-001',
-  courseCode: 'ATC-501',
-  courseName: 'Prueba Restricciones',
-  date: '2026-03-11',
-  startTime: '10:00',
-  endTime: '13:00',
-  roomName: 'Sala Radar THA-01',
-  simulator: 'THALES',
-  instructor: 'Maria Correa',
-  students: 9,
-  pseudopilots: 4,
+import type { CourseSession } from '@/services/api/simlogicApi'
+import { fetchSessions } from '@/services/api/simlogicApi'
+
+function formatDate(dateValue: string) {
+  return new Intl.DateTimeFormat('es-CO', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date(`${dateValue}T00:00:00`))
 }
 
-const selectedRoomRule = roomRules[0]
-
-const alerts = evaluateAcademicRestrictions({
-  candidateSession,
-  sameDaySessions: academicSessionsMock.filter((sessionItem) => sessionItem.date === candidateSession.date),
-  roomRule: selectedRoomRule,
-  consumedHoursByCourse: 4,
-  consumedHoursByInstructor: 4,
-  maintenanceWindows: maintenanceWindowsMock,
-})
-
 export function SchedulingPage() {
+  const [sessions, setSessions] = useState<CourseSession[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [errorMessage, setErrorMessage] = useState('')
+
+  useEffect(() => {
+    const loadSessions = async () => {
+      setIsLoading(true)
+      setErrorMessage('')
+      try {
+        const payload = await fetchSessions()
+        setSessions(payload)
+      } catch (error) {
+        setErrorMessage(
+          error instanceof Error ? error.message : 'No se pudo cargar la programacion.',
+        )
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadSessions()
+  }, [])
+
   return (
     <>
       <header className="page-header">
-        <h3>Motor de restricciones y cruces</h3>
-        <p>
-          Componente base para validar limite de 6 horas, aforo, posiciones y bloqueos por
-          mantenimiento.
-        </p>
+        <h3>Programacion de sesiones</h3>
+        <p>Vista conectada a `/api/courses/sessions/`.</p>
       </header>
 
       <section className="card stack">
-        <h4>Resultado de validacion (ejemplo)</h4>
-        {alerts.length > 0 ? (
-          <ul className="alert-list">
-            {alerts.map((alertItem) => (
-              <li key={`${alertItem.code}-${alertItem.message}`} className="status-alert">
-                [{alertItem.code}] {alertItem.message}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="status-ok">No se detectan conflictos para la sesion propuesta.</p>
-        )}
-      </section>
+        {isLoading ? <p className="inline-note">Cargando sesiones...</p> : null}
+        {errorMessage ? <p className="status-alert">{errorMessage}</p> : null}
 
-      <section className="card stack">
-        <h4>Programacion del dia ({candidateSession.date})</h4>
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Curso</th>
-              <th>Horario</th>
-              <th>Sala</th>
-              <th>Instructor</th>
-              <th>Participantes</th>
-            </tr>
-          </thead>
-          <tbody>
-            {academicSessionsMock
-              .filter((sessionItem) => sessionItem.date === candidateSession.date)
-              .map((sessionItem) => (
-                <tr key={sessionItem.id}>
-                  <td>{sessionItem.courseCode}</td>
-                  <td>
-                    {sessionItem.startTime} - {sessionItem.endTime}
-                  </td>
-                  <td>{sessionItem.roomName}</td>
-                  <td>{sessionItem.instructor}</td>
-                  <td>{sessionItem.students + sessionItem.pseudopilots}</td>
+        {!isLoading && !errorMessage ? (
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Curso</th>
+                <th>Sala principal</th>
+                <th>Sala pseudopilotos</th>
+                <th>Inicio</th>
+                <th>Fin</th>
+                <th>Hora</th>
+                <th>Horas/dia</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sessions.map((session) => (
+                <tr key={session.id}>
+                  <td>{session.course_detail.name}</td>
+                  <td>{session.main_room_detail.name}</td>
+                  <td>{session.pseudopilot_room_detail.name}</td>
+                  <td>{formatDate(session.start_date)}</td>
+                  <td>{formatDate(session.end_date)}</td>
+                  <td>{session.schedule_time.slice(0, 5)}</td>
+                  <td>{session.daily_simulation_hours}</td>
+                  <td>{session.is_active ? 'Activa' : 'Inactiva'}</td>
                 </tr>
               ))}
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        ) : null}
       </section>
     </>
   )
